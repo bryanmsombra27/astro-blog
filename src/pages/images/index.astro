@@ -1,0 +1,91 @@
+---
+import { Image } from "astro:assets";
+import MainLayout from "../../layout/MainLayout.astro";
+import "../../styles/global.css";
+import image5 from "@images/post-05.png";
+import { Picture } from "astro:assets";
+---
+
+<MainLayout title="Imagenes">
+  <h1 class="text-5xl">Imagenes</h1>
+
+  <img
+    src="/assets/images/post-05.png"
+    alt=""
+  />
+
+  <div class="h-[3000px]">
+    <img
+      loading="eager"
+      src="/assets/images/post-01.png"
+      alt=""
+    />
+  </div>
+  <div class="h-[3000px]">
+    <img
+      loading="lazy"
+      src="/assets/images/post-01.png"
+      alt=""
+    />
+
+    <Image
+      src={image5}
+      alt="post 5"
+      width="250"
+      height="250"
+    />
+  </div>
+
+  <h1>quality Low</h1>
+  <Image
+    src={image5}
+    alt="post 5"
+    width="500"
+    height="500"
+    quality="low"
+  />
+  <h1>quality Mid</h1>
+  <Image
+    src={image5}
+    alt="post 5"
+    width="500"
+    height="500"
+    quality="mid"
+  />
+  <h1>quality High</h1>
+  <Image
+    src={image5}
+    alt="post 5"
+    width="500"
+    height="500"
+    quality="high"
+  />
+  <h1>quality Max</h1>
+  <Image
+    src={image5}
+    alt="post 5"
+    width="500"
+    height="500"
+    quality="max"
+  />
+  <h1>Formato</h1>
+  <Image
+    src={image5}
+    alt="post 5"
+    width="500"
+    height="500"
+    quality="low"
+    format="avif"
+  />
+
+  <Picture
+    src={image5}
+    alt="post 5"
+    width="500"
+    height="500"
+    quality="low"
+    formats={["webp", "avif", "png"]}
+    widths={[240, 540, 720, image5.width]}
+    sizes="(min-width: 800px) 800px, 100vw"
+  />
+</MainLayout>

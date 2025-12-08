@@ -1,0 +1,60 @@
+---
+import type { GetStaticPaths } from "astro";
+import BlogLayout from "../../layout/BlogLayout.astro";
+import { getCollection } from "astro:content";
+import { render } from "astro:content";
+import { getEntry } from "astro:content";
+import { Image } from "astro:assets";
+
+const { slug } = Astro.params;
+
+export const getStaticPaths = (async () => {
+  const blogPosts = await getCollection("blog");
+
+  return blogPosts.map((blog) => ({
+    params: {
+      slug: blog.id,
+    },
+    props: {
+      title: blog.data.title,
+      post: blog.data,
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { title, post } = Astro.props;
+const frontmatter = post;
+
+const entry = await getEntry("blog", slug);
+
+if (!entry) throw new Error("Could not find that post");
+
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+---
+
+<BlogLayout title={title}>
+  <h1 class="text-xs text-gray-500 mb-0">{frontmatter.title}</h1>
+  <h4 class="text-md text-gray-400 mb-0">{frontmatter.author}</h4>
+
+  <Image
+    width={500}
+    height={500}
+    src={frontmatter.image}
+    alt={frontmatter.title}
+  />
+
+  <h3>Tabla de contenidos</h3>
+  <ol>
+    {
+      headings.map((heading, index) => (
+        <li>
+          <a href={`#${heading.slug}`}>
+            {index + 1} - {heading.text}
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+
+  <Content />
+</BlogLayout>
