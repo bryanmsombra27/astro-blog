@@ -1,5 +1,5 @@
-import { glob } from "astro/loaders";
-import { defineCollection, z } from "astro:content";
+import { glob, file } from "astro/loaders";
+import { defineCollection, reference, z } from "astro:content";
 
 const blogCollection = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/blog" }),
@@ -13,9 +13,21 @@ const blogCollection = defineCollection({
       image: image().refine((img) => img, {}),
       // image: z.string(),
 
-      author: z.string(),
+      // author: z.string(),
+      author: reference("author"),
       tags: z.array(z.string()),
+      isDraft: z.boolean().default(false),
     }),
 });
 
-export const collections = { blog: blogCollection };
+const authorCollection = defineCollection({
+  type: "data",
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      avatar: image(),
+      bio: z.string(),
+    }),
+});
+
+export const collections = { blog: blogCollection, author: authorCollection };

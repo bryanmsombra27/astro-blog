@@ -30,11 +30,36 @@ const entry = await getEntry("blog", slug);
 if (!entry) throw new Error("Could not find that post");
 
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const author = (await getEntry("author", entry.data.author.id))?.data;
 ---
 
 <BlogLayout title={title}>
   <h1 class="text-xs text-gray-500 mb-0">{frontmatter.title}</h1>
-  <h4 class="text-md text-gray-400 mb-0">{frontmatter.author}</h4>
+
+  <div class="flex gap-8 mb-10">
+    <div>
+      <Image
+        src={author?.avatar!}
+        width={50}
+        height={50}
+        alt={author?.name!}
+        class="rounded-full"
+      />
+    </div>
+    <div>
+      <a href={`/blog/${frontmatter.author.id}`}>
+        <h4 class="text-md text-gray-400 mb-0">{author?.name}</h4>
+      </a>
+
+      <span class="text-xs text-gray-200">
+        {
+          new Intl.DateTimeFormat("es-MX", { dateStyle: "long" }).format(
+            new Date(post.date)
+          )
+        }
+      </span>
+    </div>
+  </div>
 
   <Image
     width={500}
